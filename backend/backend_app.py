@@ -34,12 +34,12 @@ def add_posts():
     return jsonify(new_post), 201
 
 
-@app.route('/api/posts/<id>', methods=['DELETE'])
+@app.route('/api/posts/<int:id>', methods=['DELETE'])
 def delete_posts(id):
     post_with_id = [post for post in POSTS if post['id'] == id]
 
     if post_with_id == []:
-        return jsonify({"error": f"Post id {id} not found"}), 400
+        return jsonify({"error": f"Post id {id} not found"}), 404
 
     POSTS.remove(post_with_id[0])
 
