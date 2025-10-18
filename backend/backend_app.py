@@ -12,6 +12,26 @@ POSTS = [
 
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
+    sort_key = request.args.get("sort")
+    direction = request.args.get("direction")
+    if direction == "asc":
+        direction = False
+    elif direction == "desc":
+        direction = True
+
+    if sort_key or direction:
+        if not sort_key:
+            sort_key = "id"
+        if not direction:
+            direction = False
+
+        try:
+            return jsonify(sorted(POSTS, key=lambda post : post[sort_key], reverse=direction)), 200
+        except KeyError:
+            return jsonify({"error": "Invalid value for sort key"}), 400
+        except TypeError:
+            return jsonify({"error": "Invalid value for direction key"}), 400
+        
     return jsonify(POSTS), 200
 
 
